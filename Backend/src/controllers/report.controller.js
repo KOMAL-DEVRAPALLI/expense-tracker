@@ -67,51 +67,6 @@ export const generatePdfReport = async (req, res) => {
         : null;
 
     // ==========================
-    // Settlement Calculation
-    // ==========================
-
-    const creditors = summary
-      .filter((m) => m.balance > 0)
-      .map((m) => ({
-        name: m.name,
-        amount: m.balance,
-      }));
-
-    const debtors = summary
-      .filter((m) => m.balance < 0)
-      .map((m) => ({
-        name: m.name,
-        amount: Math.abs(m.balance),
-      }));
-
-    const settlements = [];
-
-    let i = 0;
-    let j = 0;
-
-    while (
-      i < debtors.length &&
-      j < creditors.length
-    ) {
-      const amount = Math.min(
-        debtors[i].amount,
-        creditors[j].amount
-      );
-
-      settlements.push({
-        from: debtors[i].name,
-        to: creditors[j].name,
-        amount,
-      });
-
-      debtors[i].amount -= amount;
-      creditors[j].amount -= amount;
-
-      if (debtors[i].amount < 0.01) i++;
-      if (creditors[j].amount < 0.01) j++;
-    }
-
-    // ==========================
     // PDF Setup
     // ==========================
 
@@ -289,10 +244,10 @@ export const generatePdfReport = async (req, res) => {
       );
 
       doc.text(
-        member.balance.toFixed(2),
-        COL4,
-        y
-      );
+  `${member.balance > 0 ? "+" : ""}${member.balance.toFixed(2)}`,
+  COL4,
+  y
+);
 
       doc.fillColor("black");
 
@@ -301,49 +256,6 @@ export const generatePdfReport = async (req, res) => {
 
     y += 25;
 
-    // ==========================
-    // Settlements
-    // ==========================
-
-    doc
-      .fontSize(16)
-      .font("Helvetica-Bold")
-      .text(
-        "Settlement Transactions",
-        40,
-        y
-      );
-
-    y += 25;
-
-    doc
-      .fontSize(11)
-      .font("Helvetica");
-
-    if (settlements.length === 0) {
-      doc.text(
-        "No settlements required.",
-        50,
-        y
-      );
-    } else {
-      settlements.forEach((item) => {
-        if (y > 730) {
-          doc.addPage();
-          y = 50;
-        }
-
-        doc.text(
-          `${item.from} pays ${item.to}  →  Rs. ${item.amount.toFixed(
-            2
-          )}`,
-          50,
-          y
-        );
-
-        y += 18;
-      });
-    }
 
     // ==========================
     // Footer
