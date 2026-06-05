@@ -5,16 +5,15 @@ function Layout({ children }) {
     <div className="layout">
       <aside className="sidebar">
         <div className="logo">
-          <h2>💰 Expense Tracker</h2>
-          <p>Trip Expense Management</p>
-        </div>
+  <h2>💰 Expense Tracker</h2>
+  <span>Trip Expense Management</span>
+</div>
 
         <nav>
-          <Link to="/">Summary</Link>
-          <Link to="/deposits">Deposits</Link>
-          <Link to="/expenses">Expenses</Link>
-          <Link to="/members">Members</Link>
-        </nav>
+        <NavLink to="/">Summary</NavLink>
+<NavLink to="/deposits">Deposits</NavLink>
+<NavLink to="/expenses">Expenses</NavLink>
+<NavLink to="/members">Members</NavLink></nav>
       </aside>
 
       <main className="content">

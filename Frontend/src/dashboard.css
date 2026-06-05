@@ -77,3 +77,34 @@
 .share {
   border-left: 5px solid #3b82f6;
 }
+.sidebar a {
+  text-decoration: none;
+  color: #374151;
+  padding: 12px 16px;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.sidebar a:hover {
+  background: #f3f4f6;
+}
+
+.sidebar a.active {
+  background: #ede9fe;
+  color: #6366f1;
+  font-weight: 600;
+}
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+.logo {
+  margin-bottom: 40px;
+}
+
+.logo span {
+  color: #6b7280;
+  font-size: 14px;
+}
