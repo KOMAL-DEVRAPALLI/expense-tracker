@@ -5,9 +5,11 @@ import Expense from "../models/expense.model.js";
 
 export const generatePdfReport = async (req, res) => {
   try {
-    const members = await Member.find();
-    const deposits = await Deposit.find();
-    const expenses = await Expense.find();
+    const [members, deposits, expenses] = await Promise.all([
+      Member.find().lean(),
+      Deposit.find().lean(),
+      Expense.find().lean(),
+    ]);
 
     const totalMembers = members.length;
 
@@ -21,28 +23,34 @@ export const generatePdfReport = async (req, res) => {
         ? totalExpense / totalMembers
         : 0;
 
-    const summary = members.map((member) => {
-      const memberDeposits = deposits.filter(
-        (deposit) =>
-          deposit.memberId.toString() ===
-          member._id.toString()
-      );
+    const depositMap = {};
 
-      const totalDeposit = memberDeposits.reduce(
-        (sum, deposit) => sum + deposit.amount,
-        0
-      );
+    deposits.forEach((deposit) => {
+      const memberId = deposit.memberId.toString();
 
-      const balance =
-        totalDeposit - expenseShare;
-
-      return {
-        name: member.name,
-        totalDeposit,
-        expenseShare,
-        balance,
-      };
+      depositMap[memberId] =
+        (depositMap[memberId] || 0) +
+        deposit.amount;
     });
+
+    const summary = members
+      .map((member) => {
+        const totalDeposit =
+          depositMap[member._id.toString()] || 0;
+
+        const balance =
+          totalDeposit - expenseShare;
+
+        return {
+          name: member.name,
+          totalDeposit,
+          expenseShare,
+          balance,
+        };
+      })
+      .sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
 
     const surplusMembers = summary.filter(
       (member) => member.balance > 0
@@ -68,12 +76,17 @@ export const generatePdfReport = async (req, res) => {
 
     doc.pipe(res);
 
-    // ==========================
+    const COL1 = 50;
+    const COL2 = 180;
+    const COL3 = 320;
+    const COL4 = 450;
+
+    // ======================
     // TITLE
-    // ==========================
+    // ======================
 
     doc
-      .fontSize(24)
+      .fontSize(22)
       .font("Helvetica-Bold")
       .text("TRIP EXPENSE SUMMARY", {
         align: "center",
@@ -81,15 +94,19 @@ export const generatePdfReport = async (req, res) => {
 
     doc.moveDown(2);
 
-    // ==========================
+    // ======================
     // OVERVIEW
-    // ==========================
+    // ======================
 
-    doc.fontSize(12).font("Helvetica");
+    doc
+      .fontSize(12)
+      .font("Helvetica");
 
     doc.text(`Total Members: ${totalMembers}`);
     doc.text(
-      `Total Expense: Rs. ${totalExpense.toFixed(2)}`
+      `Total Expense: Rs. ${totalExpense.toFixed(
+        2
+      )}`
     );
     doc.text(
       `Expense Share Per Member: Rs. ${expenseShare.toFixed(
@@ -101,137 +118,135 @@ export const generatePdfReport = async (req, res) => {
 
     doc
       .moveTo(50, doc.y)
-      .lineTo(560, doc.y)
+      .lineTo(550, doc.y)
       .stroke();
 
     doc.moveDown();
 
-    // ==========================
+    // ======================
     // TABLE HEADER
-    // ==========================
+    // ======================
 
     let y = doc.y;
 
     doc.font("Helvetica-Bold");
 
-    doc.text("Member", 50, y);
-    doc.text("Deposit", 180, y);
-    doc.text("Share", 320, y);
-    doc.text("Balance", 450, y);
+    doc.text("Member", COL1, y);
+    doc.text("Deposit", COL2, y);
+    doc.text("Share", COL3, y);
+    doc.text("Balance", COL4, y);
 
     y += 20;
 
     doc
       .moveTo(50, y)
-      .lineTo(560, y)
+      .lineTo(550, y)
       .stroke();
-
-    // ==========================
-    // TABLE DATA
-    // ==========================
 
     doc.font("Helvetica");
 
-    summary.forEach((member) => {
-      y += 30;
+    // ======================
+    // TABLE DATA
+    // ======================
 
-      doc.text(member.name, 50, y);
+    summary.forEach((member) => {
+      y += 25;
+
+      if (y > 720) {
+        doc.addPage();
+        y = 60;
+      }
+
+      doc.text(member.name, COL1, y);
 
       doc.text(
         `Rs. ${member.totalDeposit.toFixed(2)}`,
-        180,
+        COL2,
         y
       );
 
       doc.text(
         `Rs. ${member.expenseShare.toFixed(2)}`,
-        320,
+        COL3,
         y
       );
 
       doc.text(
         `Rs. ${member.balance.toFixed(2)}`,
-        450,
+        COL4,
         y
       );
     });
 
-    y += 40;
+    doc.moveDown(2);
+
+    // ======================
+    // RECEIVABLE
+    // ======================
 
     doc
-      .moveTo(50, y)
-      .lineTo(560, y)
-      .stroke();
+      .font("Helvetica-Bold")
+      .fontSize(14)
+      .text("Members To Receive");
 
-    // ==========================
-    // MEMBERS TO RECEIVE
-    // ==========================
+    doc.moveDown(0.5);
 
-    y += 30;
+    doc
+      .font("Helvetica")
+      .fontSize(12);
 
-    doc.font("Helvetica-Bold");
-    doc.text("Members To Receive", 50, y);
-
-    doc.font("Helvetica");
-
-    if (surplusMembers.length === 0) {
-      y += 20;
-      doc.text("None", 70, y);
+    if (!surplusMembers.length) {
+      doc.text("None");
     } else {
       surplusMembers.forEach((member) => {
-        y += 20;
-
         doc.text(
           `${member.name} : Rs. ${member.balance.toFixed(
             2
-          )}`,
-          70,
-          y
+          )}`
         );
       });
     }
 
-    // ==========================
-    // MEMBERS OWING MONEY
-    // ==========================
+    doc.moveDown();
 
-    y += 40;
+    // ======================
+    // PAYABLE
+    // ======================
 
-    doc.font("Helvetica-Bold");
-    doc.text("Members Owing Money", 50, y);
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(14)
+      .text("Members Owing Money");
 
-    doc.font("Helvetica");
+    doc.moveDown(0.5);
 
-    if (deficitMembers.length === 0) {
-      y += 20;
-      doc.text("None", 70, y);
+    doc
+      .font("Helvetica")
+      .fontSize(12);
+
+    if (!deficitMembers.length) {
+      doc.text("None");
     } else {
       deficitMembers.forEach((member) => {
-        y += 20;
-
         doc.text(
           `${member.name} : Rs. ${Math.abs(
             member.balance
-          ).toFixed(2)}`,
-          70,
-          y
+          ).toFixed(2)}`
         );
       });
     }
 
-    // ==========================
-    // FOOTER
-    // ==========================
+    doc.moveDown(2);
 
-    y += 60;
+    // ======================
+    // FOOTER
+    // ======================
 
     doc
       .fontSize(10)
       .fillColor("gray")
       .text(
-        `Generated On: ${new Date().toLocaleDateString()}`,
-        50,
-        y
+        `Generated On: ${new Date().toLocaleDateString()}`
       );
 
     doc.end();
