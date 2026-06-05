@@ -25,11 +25,11 @@ function Summary() {
   }, []);
 
   const downloadPdf = () => {
-    window.open(
-      "http://localhost:5000/api/reports/pdf",
-      "_blank"
-    );
-  };
+  window.open(
+    "https://expense-tracker-1-ewb1.onrender.com/api/reports/pdf",
+    "_blank"
+  );
+};
 
   return (
     <div>
