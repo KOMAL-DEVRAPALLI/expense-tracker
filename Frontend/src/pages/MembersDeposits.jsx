@@ -167,27 +167,6 @@ function MembersDeposits() {
         </p>
       )}
 
-      <br />
-
-      {/* Members List */}
-
-      <div className="table-card">
-        <div className="table-header">
-          <h3>Members</h3>
-        </div>
-
-        <div style={{ padding: "20px" }}>
-          {members.length === 0 ? (
-            <p>No members found</p>
-          ) : (
-            members.map((member) => (
-              <p key={member._id}>
-                {member.name}
-              </p>
-            ))
-          )}
-        </div>
-      </div>
 
       <br />
 
