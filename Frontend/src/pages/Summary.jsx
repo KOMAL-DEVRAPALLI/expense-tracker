@@ -25,19 +25,42 @@ function Summary() {
   }, []);
 
   const downloadPdf = () => {
-  window.open(
-    "https://expense-tracker-1-ewb1.onrender.com/api/reports/pdf",
-    "_blank"
-  );
-};
+    window.open(
+      "https://expense-tracker-1-ewb1.onrender.com/api/reports/pdf",
+      "_blank"
+    );
+  };
 
   return (
     <div>
-      <h1>Trip Summary</h1>
+      {/* Page Header */}
+      <div className="page-header">
+        <h1>Trip Summary</h1>
+        <p>Track trip expenses and balances</p>
+      </div>
 
-      <h3>Total Expense: ₹{totalExpense.toFixed(2)}</h3>
-      <h3>Expense Share: ₹{expenseShare.toFixed(2)}</h3>
+      {/* Stats Cards */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h4>Total Members</h4>
+          <h2>{summary.length}</h2>
+          <p>People on this trip</p>
+        </div>
 
+        <div className="stat-card expense">
+          <h4>Total Expense</h4>
+          <h2>₹{totalExpense.toFixed(2)}</h2>
+          <p>Total of all expenses</p>
+        </div>
+
+        <div className="stat-card share">
+          <h4>Expense Share</h4>
+          <h2>₹{expenseShare.toFixed(2)}</h2>
+          <p>Per member</p>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
       <div style={{ marginBottom: "20px" }}>
         <button onClick={downloadPdf}>
           Download PDF
@@ -51,52 +74,62 @@ function Summary() {
         </button>
       </div>
 
-      <p>
+      {/* Last Updated */}
+      <p style={{ marginBottom: "20px" }}>
         <strong>Last Updated:</strong> {lastUpdated}
       </p>
 
-      {summary.length === 0 ? (
-        <p>No data available</p>
-      ) : (
-        <table border="1" cellPadding="10">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Deposit</th>
-              <th>Expense Share</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
+      {/* Summary Table */}
+      <div className="table-card">
+        <div className="table-header">
+          <h3>Member Summary</h3>
+        </div>
 
-          <tbody>
-            {summary.map((member) => (
-              <tr key={member.memberId}>
-                <td>{member.name}</td>
-
-                <td>
-                  ₹{member.totalDeposit.toFixed(2)}
-                </td>
-
-                <td>
-                  ₹{member.expenseShare.toFixed(2)}
-                </td>
-
-                <td
-                  style={{
-                    color:
-                      member.balance >= 0
-                        ? "green"
-                        : "red",
-                    fontWeight: "bold",
-                  }}
-                >
-                  ₹{member.balance.toFixed(2)}
-                </td>
+        {summary.length === 0 ? (
+          <p style={{ padding: "20px" }}>
+            No data available
+          </p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Deposit</th>
+                <th>Expense Share</th>
+                <th>Balance</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+
+            <tbody>
+              {summary.map((member) => (
+                <tr key={member.memberId}>
+                  <td>{member.name}</td>
+
+                  <td>
+                    ₹{member.totalDeposit.toFixed(2)}
+                  </td>
+
+                  <td>
+                    ₹{member.expenseShare.toFixed(2)}
+                  </td>
+
+                  <td
+                    style={{
+                      color:
+                        member.balance >= 0
+                          ? "#16a34a"
+                          : "#dc2626",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ₹{member.balance.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
