@@ -152,43 +152,7 @@ function Summary() {
             </tbody>
           </table>
         )}
-        <div className="settlement-grid">
-
-  <div className="settlement-card receive">
-    <h3>Members To Receive</h3>
-
-    {
-      summary.filter(m => m.balance > 0).length === 0
-      ? <p>None</p>
-      : summary
-          .filter(m => m.balance > 0)
-          .map(m => (
-            <p key={m.memberId}>
-              {m.name} : ₹{m.balance.toFixed(2)}
-            </p>
-          ))
-    }
-  </div>
-
-  <div className="settlement-card owe">
-    <h3>Members Owing Money</h3>
-
-    {
-      summary.filter(m => m.balance < 0).length === 0
-      ? <p>None</p>
-      : summary
-          .filter(m => m.balance < 0)
-          .map(m => (
-            <p key={m.memberId}>
-              {m.name} : ₹{Math.abs(
-                m.balance
-              ).toFixed(2)}
-            </p>
-          ))
-    }
-  </div>
-
-</div>
+        
       </div>
     </div>
   );
