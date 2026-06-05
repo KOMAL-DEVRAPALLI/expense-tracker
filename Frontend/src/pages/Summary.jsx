@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-
+import { FaUsers } from "react-icons/fa";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 function Summary() {
   const [summary, setSummary] = useState([]);
   const [totalExpense, setTotalExpense] = useState(0);
@@ -40,42 +41,62 @@ function Summary() {
       </div>
 
       {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <h4>Total Members</h4>
-          <h2>{summary.length}</h2>
-          <p>People on this trip</p>
-        </div>
+     <div className="stats-grid">
 
-        <div className="stat-card expense">
-          <h4>Total Expense</h4>
-          <h2>₹{totalExpense.toFixed(2)}</h2>
-          <p>Total of all expenses</p>
-        </div>
+  <div className="stat-card">
+    <div className="card-icon">
+      <FaUsers />
+    </div>
 
-        <div className="stat-card share">
-          <h4>Expense Share</h4>
-          <h2>₹{expenseShare.toFixed(2)}</h2>
-          <p>Per member</p>
-        </div>
-      </div>
+    <div>
+      <h4>Total Members</h4>
+      <h2>{summary.length}</h2>
+      <p>People on this trip</p>
+    </div>
+  </div>
+
+  <div className="stat-card expense">
+    <div className="card-icon">
+      <FaIndianRupeeSign />
+    </div>
+
+    <div>
+      <h4>Total Expense</h4>
+      <h2>₹{totalExpense.toFixed(2)}</h2>
+      <p>Total of all expenses</p>
+    </div>
+  </div>
+
+  <div className="stat-card share">
+    <div className="card-icon">
+      <FaIndianRupeeSign />
+    </div>
+
+    <div>
+      <h4>Expense Share</h4>
+      <h2>₹{expenseShare.toFixed(2)}</h2>
+      <p>Per member</p>
+    </div>
+  </div>
+
+</div>
 
       {/* Action Buttons */}
       <div className="action-buttons">
-  <button
-    className="action-btn refresh-btn"
-    onClick={fetchSummary}
-  >
-    Refresh Summary
-  </button>
+        <button
+          className="action-btn refresh-btn"
+          onClick={fetchSummary}
+        >
+          Refresh Summary
+        </button>
 
-  <button
-    className="action-btn"
-    onClick={downloadPdf}
-  >
-    Download PDF
-  </button>
-</div>
+        <button
+          className="action-btn"
+          onClick={downloadPdf}
+        >
+          Download PDF
+        </button>
+      </div>
       {/* Last Updated */}
       <p style={{ marginBottom: "20px" }}>
         <strong>Last Updated:</strong> {lastUpdated}

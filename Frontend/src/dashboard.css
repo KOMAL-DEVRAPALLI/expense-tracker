@@ -108,3 +108,28 @@
   color: #6b7280;
   font-size: 14px;
 }
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+
+  border-radius: 50%;
+  background: #f3f4f6;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  color: #6366f1;
+}
