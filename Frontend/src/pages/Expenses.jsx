@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 
 function Expenses() {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
 const [message, setMessage] = useState("");
-
+const [expenses, setExpenses] = useState([]);
+const fetchExpenses = async () => {
+  try {
+    const res = await api.get("/expenses");
+    setExpenses(res.data.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+useEffect(()=>{
+  fetchExpenses()
+},[])
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -23,6 +34,7 @@ setMessage("Expense added successfully!");
 setTimeout(() => {
   setMessage("");
 }, 3000);
+fetchExpenses()
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +67,47 @@ setTimeout(() => {
   </p>
 )}
     </div>
+    
   );
+  <div className="table-card">
+  <div className="table-header">
+    <h3>Expense History</h3>
+  </div>
+
+  {expenses.length === 0 ? (
+    <p style={{ padding: "20px" }}>
+      No expenses found
+    </p>
+  ) : (
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Amount</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {expenses.map((expense) => (
+          <tr key={expense._id}>
+            <td>{expense.title}</td>
+
+            <td>
+              ₹{expense.amount}
+            </td>
+
+            <td>
+              {new Date(
+                expense.createdAt
+              ).toLocaleDateString()}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
 }
 
 export default Expenses;
