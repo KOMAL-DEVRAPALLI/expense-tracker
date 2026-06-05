@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-function Members() {
+function MembersDeposits() {
   const [name, setName] = useState("");
   const [members, setMembers] = useState([]);
 const [message, setMessage] = useState("");
@@ -66,4 +66,4 @@ const [message, setMessage] = useState("");
   );
 }
 
-export default Members;
+export default MembersDeposits;

@@ -10,9 +10,9 @@ function Layout({ children }) {
 
         <nav>
         <NavLink to="/">Summary</NavLink>
-<NavLink to="/deposits">Deposits</NavLink>
-<NavLink to="/expenses">Expenses</NavLink>
-<NavLink to="/members">Members</NavLink></nav>
+        <NavLink to="/expenses">Expenses</NavLink>
+        <NavLink to ="/membersDeposits">Members and Deposits</NavLink>
+        </nav>
       </aside>
 
       <main className="content">

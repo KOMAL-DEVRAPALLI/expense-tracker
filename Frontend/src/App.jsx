@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Members from "./pages/Members";
-import Deposits from "./pages/Deposits";
+import MembersDeposits from "./pages/MembersDeposits";
 import Expenses from "./pages/Expenses";
 import Summary from "./pages/Summary";
 import Layout from "./components/Layouts";
@@ -12,9 +10,8 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Summary />} />
-          <Route path="/deposits" element={<Deposits />} />
           <Route path="/expenses" element={<Expenses />} />
-          <Route path="/members" element={<Members />} />
+          <Route path="/membersdeposits" element={<MembersDeposits />} />
         </Routes>
       </Layout>
     </BrowserRouter>
