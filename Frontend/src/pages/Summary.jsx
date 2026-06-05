@@ -61,19 +61,21 @@ function Summary() {
       </div>
 
       {/* Action Buttons */}
-      <div style={{ marginBottom: "20px" }}>
-        <button onClick={downloadPdf}>
-          Download PDF
-        </button>
+      <div className="action-buttons">
+  <button
+    className="action-btn refresh-btn"
+    onClick={fetchSummary}
+  >
+    Refresh Summary
+  </button>
 
-        <button
-          onClick={fetchSummary}
-          style={{ marginLeft: "10px" }}
-        >
-          Refresh Summary
-        </button>
-      </div>
-
+  <button
+    className="action-btn"
+    onClick={downloadPdf}
+  >
+    Download PDF
+  </button>
+</div>
       {/* Last Updated */}
       <p style={{ marginBottom: "20px" }}>
         <strong>Last Updated:</strong> {lastUpdated}

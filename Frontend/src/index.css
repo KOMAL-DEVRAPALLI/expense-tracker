@@ -31,12 +31,12 @@ h3 {
   background: white;
   border-radius: 10px;
 }
-button {
-  padding: 10px 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
 }
+
 .action-btn {
   background: #6366f1;
   color: white;
@@ -45,10 +45,18 @@ button {
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
+  transition: 0.2s;
 }
 
 .action-btn:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.refresh-btn {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
 }
 input,
 select {
