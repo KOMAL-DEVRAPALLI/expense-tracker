@@ -4,7 +4,7 @@ import api from "../services/api";
 function MembersDeposits() {
   const [name, setName] = useState("");
   const [members, setMembers] = useState([]);
-
+const [deposits, setDeposits] = useState([]);
   const [memberId, setMemberId] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -23,9 +23,17 @@ function MembersDeposits() {
       console.log(error);
     }
   };
-
+const fetchDeposits = async () => {
+  try {
+    const res = await api.get("/deposits");
+    setDeposits(res.data.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
   useEffect(() => {
     fetchMembers();
+    fetchDeposits()
   }, []);
 
   const handleMemberSubmit = async (e) => {
@@ -63,6 +71,7 @@ function MembersDeposits() {
       setTimeout(() => {
         setMessage("");
       }, 3000);
+      fetchDeposits();
     } catch (error) {
       console.log(error);
     }
@@ -171,6 +180,39 @@ function MembersDeposits() {
       </div>
     </div>
   );
+  <div className="table-card">
+  <div className="table-header">
+    <h3>Deposit History</h3>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {deposits.map((deposit) => (
+        <tr key={deposit._id}>
+          <td>{deposit.memberId?.name}</td>
+
+          <td>
+            ₹{deposit.amount}
+          </td>
+
+          <td>
+            {new Date(
+              deposit.createdAt
+            ).toLocaleDateString()}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 }
 
 export default MembersDeposits;
