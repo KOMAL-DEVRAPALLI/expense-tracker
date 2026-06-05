@@ -4,7 +4,8 @@ import api from "../services/api";
 function MembersDeposits() {
   const [name, setName] = useState("");
   const [members, setMembers] = useState([]);
-const [deposits, setDeposits] = useState([]);
+  const [deposits, setDeposits] = useState([]);
+
   const [memberId, setMemberId] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -23,17 +24,19 @@ const [deposits, setDeposits] = useState([]);
       console.log(error);
     }
   };
-const fetchDeposits = async () => {
-  try {
-    const res = await api.get("/deposits");
-    setDeposits(res.data.data);
-  } catch (error) {
-    console.log(error);
-  }
-};
+
+  const fetchDeposits = async () => {
+    try {
+      const res = await api.get("/deposits");
+      setDeposits(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchMembers();
-    fetchDeposits()
+    fetchDeposits();
   }, []);
 
   const handleMemberSubmit = async (e) => {
@@ -65,13 +68,13 @@ const fetchDeposits = async () => {
       });
 
       setAmount("");
+      fetchDeposits();
 
       setMessage("Deposit added successfully!");
 
       setTimeout(() => {
         setMessage("");
       }, 3000);
-      fetchDeposits();
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +82,10 @@ const fetchDeposits = async () => {
 
   return (
     <div>
-      <h1>Members & Deposits</h1>
+      <div className="page-header">
+        <h1>Members & Deposits</h1>
+        <p>Manage trip members and deposits</p>
+      </div>
 
       {/* Add Member */}
 
@@ -163,7 +169,7 @@ const fetchDeposits = async () => {
 
       <br />
 
-      {/* Member List */}
+      {/* Members List */}
 
       <div className="table-card">
         <div className="table-header">
@@ -171,48 +177,66 @@ const fetchDeposits = async () => {
         </div>
 
         <div style={{ padding: "20px" }}>
-          {members.map((member) => (
-            <p key={member._id}>
-              {member.name}
-            </p>
-          ))}
+          {members.length === 0 ? (
+            <p>No members found</p>
+          ) : (
+            members.map((member) => (
+              <p key={member._id}>
+                {member.name}
+              </p>
+            ))
+          )}
         </div>
+      </div>
+
+      <br />
+
+      {/* Deposit History */}
+
+      <div className="table-card">
+        <div className="table-header">
+          <h3>Deposit History</h3>
+        </div>
+
+        {deposits.length === 0 ? (
+          <p style={{ padding: "20px" }}>
+            No deposits found
+          </p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {deposits.map((deposit) => (
+                <tr key={deposit._id}>
+                  <td>
+                    {deposit.memberId?.name ||
+                      deposit.memberId}
+                  </td>
+
+                  <td>
+                    ₹{deposit.amount}
+                  </td>
+
+                  <td>
+                    {new Date(
+                      deposit.createdAt
+                    ).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
-  <div className="table-card">
-  <div className="table-header">
-    <h3>Deposit History</h3>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Member</th>
-        <th>Amount</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {deposits.map((deposit) => (
-        <tr key={deposit._id}>
-          <td>{deposit.memberId?.name}</td>
-
-          <td>
-            ₹{deposit.amount}
-          </td>
-
-          <td>
-            {new Date(
-              deposit.createdAt
-            ).toLocaleDateString()}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
 }
 
 export default MembersDeposits;
