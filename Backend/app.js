@@ -19,6 +19,12 @@ app.use(express.json());
 
 // Database Connection
 connectDB();
+app.get("/test", (req, res) => {
+  res.json({
+    success: true,
+    message: "Test route working",
+  });
+});
 app.use("/api/members", memberRoutes);
 app.use("/api/deposits", depositRoutes);
 app.use("/api/expenses", expenseRoutes);
