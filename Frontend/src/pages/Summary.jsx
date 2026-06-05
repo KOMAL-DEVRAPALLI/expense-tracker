@@ -113,39 +113,44 @@ function Summary() {
             No data available
           </p>
         ) : (
-         <div className="member-cards">
-  {summary.map((member) => (
-    <div
-      key={member.memberId}
-      className="member-card"
-    >
-      <h3>{member.name}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Deposit</th>
+                <th>Expense Share</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
 
-      <p>
-        Deposit: ₹
-        {member.totalDeposit.toFixed(2)}
-      </p>
+            <tbody>
+              {summary.map((member) => (
+                <tr key={member.memberId}>
+                  <td>{member.name}</td>
 
-      <p>
-        Share: ₹
-        {member.expenseShare.toFixed(2)}
-      </p>
+                  <td>
+                    ₹{member.totalDeposit.toFixed(2)}
+                  </td>
 
-      <p
-        style={{
-          color:
-            member.balance >= 0
-              ? "#16a34a"
-              : "#dc2626",
-          fontWeight: "bold",
-        }}
-      >
-        Balance: ₹
-        {member.balance.toFixed(2)}
-      </p>
-    </div>
-  ))}
-</div>
+                  <td>
+                    ₹{member.expenseShare.toFixed(2)}
+                  </td>
+
+                  <td
+                    style={{
+                      color:
+                        member.balance >= 0
+                          ? "#16a34a"
+                          : "#dc2626",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ₹{member.balance.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
         
       </div>
