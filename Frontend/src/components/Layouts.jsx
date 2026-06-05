@@ -1,26 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
-function Layout({ children }) {
+function Layout() {
   return (
-    <div
-      style={{
-        maxWidth: "1000px",
-        margin: "0 auto",
-        padding: "20px",
-      }}
-    >
-      <h1>Expense Tracker</h1>
+    <div className="layout">
 
-      <nav
-        style={{
-          display: "flex",
-          gap: "20px",
-          marginBottom: "20px",
-        }}
-      >
-      </nav>
+      <aside className="sidebar">
+        <h2>Expense Tracker</h2>
 
-      {children}
+        <nav>
+          <Link to="/summary">Summary</Link>
+          <Link to="/deposits">Deposits</Link>
+          <Link to="/expenses">Expenses</Link>
+          <Link to="/members">Members</Link>
+        </nav>
+      </aside>
+
+      <main className="content">
+        <Outlet />
+      </main>
+
     </div>
   );
 }
