@@ -1,22 +1,23 @@
-import { Link, Outlet } from "react-router-dom";
-
-function Layout() {
+function Layout({ children }) {
   return (
     <div className="layout">
 
       <aside className="sidebar">
-        <h2>Expense Tracker</h2>
+        <div className="logo">
+          <h2>💰 Expense Tracker</h2>
+          <p>Trip Expense Management</p>
+        </div>
 
         <nav>
-          <Link to="/summary">Summary</Link>
-          <Link to="/deposits">Deposits</Link>
-          <Link to="/expenses">Expenses</Link>
-          <Link to="/members">Members</Link>
+          <a href="/">Summary</a>
+          <a href="/deposits">Deposits</a>
+          <a href="/expenses">Expenses</a>
+          <a href="/members">Members</a>
         </nav>
       </aside>
 
       <main className="content">
-        <Outlet />
+        {children}
       </main>
 
     </div>
