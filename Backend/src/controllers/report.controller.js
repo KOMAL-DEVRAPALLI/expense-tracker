@@ -265,15 +265,19 @@ export const generatePdfReport = async (req, res) => {
 
     doc.fillColor("gray");
 
-    doc.text(
-      `Generated On: ${new Date().toLocaleDateString()}`,
-      40,
-      doc.page.height - 40,
-      {
-        align: "center",
-      }
-    );
+  y += 30;
 
+doc
+  .fontSize(9)
+  .fillColor("gray")
+  .text(
+    `Generated On: ${new Date().toLocaleDateString()}`,
+    50,
+    y,
+    {
+      align: "center",
+    }
+  );
     doc.end();
   } catch (error) {
     console.error(error);
