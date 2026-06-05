@@ -8,5 +8,5 @@ const router = express.Router();
 
 router.post("/", createExpense);
 router.get("/", getExpenses);
-
+router.delete("/:id", deleteExpense);
 export default router;
