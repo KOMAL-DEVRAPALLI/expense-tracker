@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-
+import { Link, NavLink } from "react-router-dom";
 function Layout({ children }) {
   return (
     <div className="layout">
